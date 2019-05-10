@@ -16,19 +16,19 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration // 注册到springboot容器中
-@MapperScan(basePackages = "com.spring.boot.mapper", sqlSessionFactoryRef = "inout2SqlSessionFactory")
+@MapperScan(basePackages = "com.spring.boot.mapper", sqlSessionFactoryRef = "test02SqlSessionFactory")
 @Slf4j
 public class DataSource2Config {
 
-    @Bean(name = "inout2DataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.inout2")
+    @Bean(name = "test02DataSource")
+    @ConfigurationProperties(prefix = "spring.datasource.test02")
     public DataSource testDataSource() {
         log.info("datasource2");
         return DataSourceBuilder.create().build();
     }
 
-    @Bean(name = "inout2SqlSessionFactory")
-    public SqlSessionFactory testSqlSessionFactory(@Qualifier("inout2DataSource") DataSource dataSource)
+    @Bean(name = "test02SqlSessionFactory")
+    public SqlSessionFactory testSqlSessionFactory(@Qualifier("test02DataSource") DataSource dataSource)
             throws Exception {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
@@ -38,14 +38,14 @@ public class DataSource2Config {
         return bean.getObject();
     }
 
-    @Bean(name = "inout2TransactionManager")
-    public DataSourceTransactionManager testTransactionManager(@Qualifier("inout2DataSource") DataSource dataSource) {
+    @Bean(name = "test02TransactionManager")
+    public DataSourceTransactionManager testTransactionManager(@Qualifier("test02DataSource") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 
-    @Bean(name = "inout2SqlSessionTemplate")
+    @Bean(name = "test02SqlSessionTemplate")
     public SqlSessionTemplate testSqlSessionTemplate(
-            @Qualifier("inout2SqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
+            @Qualifier("test02SqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
 

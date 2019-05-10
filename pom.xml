@@ -50,5 +50,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        
+        <!-- 添加jta 解决多数据源事务 -->
+        <dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-jta-atomikos</artifactId>
+		</dependency>
     </dependencies> 
 </project>
