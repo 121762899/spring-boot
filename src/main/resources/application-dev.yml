@@ -1,0 +1,79 @@
+spring:
+  datasource: # 这里配置了两个数据源，下面还有两个数据源，上面的两个数据源没有解决多数据源事务问题，下面的两个用jta-atomikos 解决了多数据源事务问题
+    test02:
+      password: root
+      jdbc-url: jdbc:mysql://localhost:3306/test02?useSSL=false&useUnicode=true&characterEncoding=utf-8
+      driver-class-name: com.mysql.jdbc.Driver
+      username: root
+    test01:
+      jdbc-url: jdbc:mysql://localhost:3306/test01?useSSL=false&useUnicode=true&characterEncoding=utf-8
+      password: root
+      driver-class-name: com.mysql.jdbc.Driver
+      username: root
+  rabbitmq: # rabbitMq 相关配置
+    connection-timeout: 15000
+    template:
+      mandatory: true
+    password: guest
+    publisher-returns: true
+    addresses: 127.0.0.1:5672
+    listener:
+      simple:
+        acknowledge-mode: manual
+        max-concurrency: 10
+        concurrency: 5
+      order:
+        exchange:
+          durable: true
+          ignoreDeclarationExceptions: true
+          name: exchange-2
+          type: topic
+        key: springboot.*
+        queue:
+          durable: true
+          name: queue-2
+    virtual-host: /
+    publisher-confirms: true
+    username: guest
+  redis: # redis 相关配置
+    database: 0
+    port: 6379
+    jedis:
+      pool:
+        max-idle: 10
+        min-idle: 1
+        max-active: 1000
+        max-wait: 1000ms
+    host: 127.0.0.1
+pagehelper: # 分页配置
+  supportMethodsArguments: true
+  reasonable: true
+  helperDialect: mysql
+  params: count=countSql
+  page-size-zero: true
+logging: # log4j2 配置
+  config: classpath:log4j2-dev.xml
+mysql:   # 数据源3 和数据源4
+  datasource:
+    test04:
+      password: root
+      maintenanceInterval: 60
+      minPoolSize: 3
+      borrowConnectionTimeout: 30
+      loginTimeout: 30
+      maxIdleTime: 60
+      maxPoolSize: 25
+      url: jdbc:mysql://localhost:3306/test04?useUnicode=true&characterEncoding=utf-8
+      maxLifetime: 20000
+      username: root
+    test03:
+      maintenanceInterval: 60
+      password: root
+      minPoolSize: 3
+      borrowConnectionTimeout: 30
+      loginTimeout: 30
+      maxIdleTime: 60
+      maxPoolSize: 25
+      maxLifetime: 20000
+      url: jdbc:mysql://localhost:3306/test03?useUnicode=true&characterEncoding=utf-8
+      username: root
