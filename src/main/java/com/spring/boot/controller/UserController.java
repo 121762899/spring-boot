@@ -22,10 +22,10 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     
     @RequestMapping("/findUserList")
-    public PageInfo<User> findUserList(int page, int size) {
+    public PageInfo<User> findUserList(Long partionId,int page, int size) {
         log.info("This is lombok log");
         logger.info("this is apache log");
-        return userService.findUserList(page, size);
+        return userService.findUserList(partionId,page, size);
     }
     
 }

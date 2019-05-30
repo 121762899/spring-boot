@@ -25,7 +25,7 @@ public class UserService {
      * @param size
      * @return
      */
-    public PageInfo<User> findUserList(int page, int size) {
+    public PageInfo<User> findUserList(Long partionId,int page, int size) {
         // 开启分页插件,放在查询语句上面
         PageHelper.startPage(page, size);
         List<User> listUser = userMapper.findUserList();
