@@ -38,13 +38,14 @@ spring:
   redis: # redis 相关配置
     database: 0
     port: 6379
-    jedis:
-      pool:
-        max-idle: 10
-        min-idle: 1
-        max-active: 1000
-        max-wait: 1000ms
     host: 127.0.0.1
+    maxTotal: 100
+     # 最大空闲实例数
+    maxIdle: 10
+     # (创建实例时)最大等待时间
+    maxWaitMillis: 10000
+    # (创建实例时)是否验证
+    testOnBorrow: true
 pagehelper: # 分页配置
   supportMethodsArguments: true
   reasonable: true

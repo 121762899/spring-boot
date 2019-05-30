@@ -24,7 +24,7 @@ import com.spring.boot.entity.db.DBConfig2;
  */
 @MapperScan("com.spring.boot.mapper")
 @SpringBootApplication
-@EnableConfigurationProperties(value = { DBConfig1.class, DBConfig2.class })
+//@EnableConfigurationProperties(value = { DBConfig1.class, DBConfig2.class })
 public class AppStarter {
     public static void main(String[] args) {
         SpringApplication.run(AppStarter.class, args);
