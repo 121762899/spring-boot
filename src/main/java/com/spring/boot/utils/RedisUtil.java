@@ -64,29 +64,21 @@ public class RedisUtil {
         try(Jedis jedis = jedisPool.getResource()){
             jedis.auth("password"); 
 
-
-
             jedis.connect();//连接
 
             jedis.disconnect();//断开连接
 
 
-
+            /*****************redis 通用功能 ***********************/
             Set<String> keys = jedis.keys("*"); //列出所有的key
 
             Set<String> keys2 = jedis.keys("key"); //查找特定的key
-
-             
-
-
 
             //移除给定的一个或多个key,如果key不存在,则忽略该命令. 
 
             jedis.del("key1");
 
             jedis.del("key1","key2","key3","key4","key5");
-
-
 
             //移除给定key的生存时间(设置这个key永不过期)
             jedis.persist("key1"); 
@@ -104,20 +96,39 @@ public class RedisUtil {
             //设置key生存时间，当key过期时，它会被自动删除。 
             jedis.expire("key1", 5);//5秒过期 
              
-
-
-            //字符串值value关联到key。 
-            jedis.set("key1", "value1"); 
-
-            //将值value关联到key，并将key的生存时间设为seconds(秒)。 
-            jedis.setex("foo", 5, "haha"); 
-
             //清空所有的key
             jedis.flushAll();
 
             //返回key的个数 
             jedis.dbSize();
 
+            /*****************redis 字符串功能 ***********************/
+            //字符串值value关联到key。 
+            jedis.set("key1", "value1"); 
+            
+            //nxxx NX|XX, NX -- Only set the key if it does not already exist. XX -- Only set the key
+            jedis.set("key", "value", "NX");
+            
+            //nxxx NX|XX, NX -- Only set the key if it does not already exist. XX -- Only set the key
+            // @param expx EX|PX, expire time units: EX = seconds; PX = milliseconds
+            // 分布式锁的功能，如果不存在设置value ,加过期时间
+            jedis.set("key", "value", "NX", "EX", 3);
+
+            //将值value关联到key，并将key的生存时间设为seconds(秒)。 
+            jedis.setex("foo", 5, "haha"); 
+            
+            //如果key 不存在则重新设置成value
+            jedis.setnx("key", "value");
+            
+            //用 value 参数覆写给定 key 所储存的字符串值，从偏移量 offset 开始
+            jedis.setrange("key", 2, "value");
+            
+            jedis.get("key");
+            //将给定 key 的值设为 value ，并返回 key 的旧值(old value)
+            jedis.getSet("key", "value");
+
+           
+            /*****************redis Hash 功能 ***********************/
             //哈希表key中的域field的值设为value。 
             jedis.hset("key1", "field1", "field1-value"); 
             jedis.hset("key1", "field2", "field2-value"); 
@@ -127,9 +138,11 @@ public class RedisUtil {
             map.put("field2", "field2-value"); 
             jedis.hmset("key1", map); 
 
+            //查看哈希表 key 中，指定的字段是否存在
+            jedis.hexists("key", "field");
 
             //返回哈希表key中给定域field的值 
-            jedis.hget("key1", "field1");
+            String hget = jedis.hget("key1", "field1");
 
             //返回哈希表key中给定域field的值(多个)
             List list = jedis.hmget("key1","field1","field2"); 
@@ -151,13 +164,14 @@ public class RedisUtil {
             jedis.hexists("key1", "field1");
 
             //返回哈希表key中的所有域
-            jedis.hkeys("key1");
+            Set<String> hkeys = jedis.hkeys("key1");
 
             //返回哈希表key中的所有值
-            jedis.hvals("key1");
+            List<String> hvals = jedis.hvals("key1");
 
 
 
+            /*****************redis list 功能 ***********************/
             //将值value插入到列表key的表头。 
             jedis.lpush("key1", "value1-0"); 
             jedis.lpush("key1", "value1-1"); 
@@ -173,9 +187,17 @@ public class RedisUtil {
 
             //返回列表key的长度。 
             jedis.llen("key1");
+            
+            //移出并获取列表的第一个元素
+            jedis.lpop("key");
+            
+            //移除列表的最后一个元素，并将该元素添加到另一个列表并返回
+            String rpoplpush = jedis.rpoplpush("srckey", "dstkey");
 
+            //将一个值插入到已存在的列表头部
+            jedis.lpushx("key", "string");
 
-
+            /*****************redis set 功能 ***********************/
             //将member元素加入到集合key当中。 
             jedis.sadd("key1", "value0"); 
             jedis.sadd("key1", "value1"); 
